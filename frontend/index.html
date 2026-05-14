@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="UTF-8"><title>ИС оценки координат</title></head>
+<body>
+<h2>Расчёт (без визуализации)</h2>
+<input id="mission" placeholder="mission_1">
+<select id="mode"><option value="practical">Практический</option><option value="experimental">Экспериментальный</option></select>
+<select id="batch"><option>50</option><option selected>100</option><option>250</option><option>1000</option></select>
+<input id="customBatch" placeholder="или своё число">
+<label>Сегментов разлиновки области (10-100):</label><input id="segments" type="number" min="10" max="100" value="30">
+<input id="refx" placeholder="Эталон X"><input id="refy" placeholder="Эталон Y">
+<button onclick="run()">Запустить расчёт</button>
+<h3>Результат расчёта</h3><pre id="out"></pre>
+<h3>Визуализация (отдельно, после расчёта)</h3>
+<button onclick="visualize()">Показать данные для визуализации</button><pre id="viz"></pre>
+<script>
+let lastResult=null;
+async function run(){
+ const batch = document.getElementById('customBatch').value || document.getElementById('batch').value;
+ const payload={mission_id:mission.value,mode:mode.value,batch_size:Number(batch),grid_segments:Number(segments.value),reference_x:refx.value?Number(refx.value):null,reference_y:refy.value?Number(refy.value):null};
+ const res=await fetch('http://localhost:8000/api/stream/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+ lastResult=await res.json();
+ out.textContent=JSON.stringify(lastResult,null,2);
+}
+function visualize(){
+ if(!lastResult){ viz.textContent='Сначала выполните расчёт'; return; }
+ viz.textContent=JSON.stringify({region_polygon:lastResult.region_polygon,grid_segments:lastResult.suggested_grid_segments,center:[lastResult.center_x,lastResult.center_y],radius:lastResult.radius},null,2);
+}
+</script></body></html>

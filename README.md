@@ -1,21 +1,25 @@
 # VKR2026
 
-Прототип ИС оценки координат источника излучения.
+Полнофункциональный прототип ИС оценки координат источника излучения (Backend + Frontend + PostgreSQL).
 
-## База данных PostgreSQL
-В `sql/schema.sql` реализована физическая схема БД, которая:
-1. Покрывает логическую модель из отчёта (roles/users, input_data_sets, raw/processed_measurements, calculation_runs/results, aggregated_results, experimental_runs, destruction_means).
-2. Сохраняет совместимость с текущим backend-кодом через таблицы `measurements`, `estimations`, `weapon_profiles`.
+## Что связано воедино
+- **Backend (FastAPI)**: загрузка измерений, предобработка, расчет по батчам, результаты.
+- **Database (PostgreSQL)**: нормализованная схема + совместимость текущего backend.
+- **Frontend (HTML/JS)**: рабочие экранные формы "Главная / Входные данные / Расчёт / Результаты" с вызовами API.
 
-Это позволяет не ломать текущие API-эндпоинты и одновременно перейти на нормализованную модель данных.
+## Основные API
+- `GET /api/health`
+- `GET /api/missions`
+- `POST /api/measurements/batch`
+- `POST /api/measurements/preprocess`
+- `POST /api/stream/run`
+- `GET /api/estimations/{mission_id}`
 
-## Применение схемы
+## Запуск
 ```bash
 psql -U postgres -d vkr2026 -f sql/schema.sql
-```
-
-## Запуск backend
-```bash
 pip install -r backend/requirements.txt
 uvicorn backend.app.main:app --reload
 ```
+
+Открыть UI: `frontend/index.html` (через локальный web server или напрямую в браузере).

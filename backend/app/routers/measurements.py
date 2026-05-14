@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..db import get_db
@@ -24,6 +25,25 @@ def ingest_batch(payload: BatchIngestRequest, db: Session = Depends(get_db)):
         db.add(Measurement(**row.model_dump(), mission_id=payload.mission_id))
     db.commit()
     return {'ingested': len(payload.rows)}
+
+
+@router.get('/missions')
+def list_missions(db: Session = Depends(get_db)):
+    rows = (
+        db.query(Measurement.mission_id, func.count(Measurement.id).label('count'))
+        .group_by(Measurement.mission_id)
+        .order_by(Measurement.mission_id)
+        .all()
+    )
+    return [{'mission_id': r.mission_id, 'count': r.count} for r in rows]
+
+
+@router.get('/measurements/{mission_id}', response_model=list[MeasurementOut])
+def get_measurements(mission_id: str, db: Session = Depends(get_db)):
+    rows = db.query(Measurement).filter(Measurement.mission_id == mission_id).order_by(Measurement.timestamp_utc).all()
+    if not rows:
+        raise HTTPException(status_code=404, detail='Миссия не найдена')
+    return rows
 
 
 @router.post('/measurements/preprocess')

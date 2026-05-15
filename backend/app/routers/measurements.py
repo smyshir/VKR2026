@@ -22,7 +22,9 @@ def create_measurement(payload: MeasurementCreate, db: Session = Depends(get_db)
 @router.post('/measurements/batch')
 def ingest_batch(payload: BatchIngestRequest, db: Session = Depends(get_db)):
     for row in payload.rows:
-        db.add(Measurement(**row.model_dump(), mission_id=payload.mission_id))
+        row_data = row.model_dump()
+        row_data['mission_id'] = payload.mission_id
+        db.add(Measurement(**row_data))
     db.commit()
     return {'ingested': len(payload.rows)}
 

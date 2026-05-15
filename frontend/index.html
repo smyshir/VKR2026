@@ -9,82 +9,105 @@
     .menu{background:#fff;padding:18px;border-right:1px solid #ddd}
     .menu h3{margin-top:0}
     .menu button{display:block;width:100%;margin:6px 0;padding:10px}
-    .content{padding:24px}
-    .card{background:#fff;padding:16px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px}
-    input,select,button{padding:8px;margin:4px}
-    table{width:100%;border-collapse:collapse;background:#fff}
-    th,td{border:1px solid #ddd;padding:6px;font-size:13px}
-    pre{background:#111;color:#9ef;padding:10px;overflow:auto}
-    .hidden{display:none}
+    .content{padding:24px}.card{background:#fff;padding:16px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px}
+    input,select,button{padding:8px;margin:4px}table{width:100%;border-collapse:collapse;background:#fff}
+    th,td{border:1px solid #ddd;padding:6px;font-size:13px}pre{background:#111;color:#9ef;padding:10px;overflow:auto}.hidden{display:none}
   </style>
 </head>
 <body>
-<div class="layout">
-  <div class="menu">
-    <h3>ИС оценки координат</h3>
-    <button onclick="show('home')">Главная</button>
-    <button onclick="show('input')">Входные данные</button>
-    <button onclick="show('calc')">Расчёт</button>
-    <button onclick="show('results')">Результаты</button>
-  </div>
-  <div class="content">
-    <section id="home" class="page">
-      <div class="card">Статус API: <span id="health">проверка...</span></div>
-    </section>
-
-    <section id="input" class="page hidden">
-      <div class="card">
-        <h3>Загрузка данных батчем</h3>
-        <input id="mission" placeholder="mission_1" />
-        <button onclick="loadDemo()">Загрузить demo 100 точек</button>
-        <button onclick="fetchMissionList()">Обновить список миссий</button>
-      </div>
-      <div class="card">
-        <h3>Проверка/предобработка</h3>
-        <input id="prepMission" placeholder="mission_1"/>
-        <input id="minQuality" type="number" step="0.01" value="0.7"/>
-        <input id="sigma" type="number" step="0.1" value="2.0"/>
-        <button onclick="preprocess()">Предобработка</button>
-        <pre id="prepOut"></pre>
-      </div>
-      <div class="card">
-        <h3>Миссии</h3>
-        <table id="missionsTbl"><thead><tr><th>mission_id</th><th>count</th></tr></thead><tbody></tbody></table>
-      </div>
-    </section>
-
-    <section id="calc" class="page hidden">
-      <div class="card">
-        <h3>Запуск расчёта</h3>
-        <input id="calcMission" placeholder="mission_1"/>
-        <select id="mode"><option value="practical">Практический</option><option value="experimental">Экспериментальный</option></select>
-        <select id="batch"><option>50</option><option selected>100</option><option>250</option><option>1000</option></select>
-        <input id="segments" type="number" min="10" max="100" value="30"/>
-        <input id="refx" placeholder="Эталон X"/><input id="refy" placeholder="Эталон Y"/>
-        <button onclick="runCalc()">Выполнить расчёт</button>
-      </div>
-      <pre id="calcOut"></pre>
-    </section>
-
-    <section id="results" class="page hidden">
-      <div class="card"><h3>История расчётов по миссии</h3>
-        <input id="resMission" placeholder="mission_1"/><button onclick="loadResults()">Загрузить</button>
-        <table id="resultsTbl"><thead><tr><th>batch</th><th>x</th><th>y</th><th>rmse</th><th>time</th></tr></thead><tbody></tbody></table>
-      </div>
-    </section>
-  </div>
+<div class="layout"><div class="menu"><h3>ИС оценки координат</h3>
+  <button onclick="show('home')">Главная</button><button onclick="show('input')">Входные данные</button><button onclick="show('calc')">Расчёт</button><button onclick="show('results')">Результаты</button>
 </div>
+<div class="content">
+<section id="home" class="page"><div class="card">Статус API: <span id="health">проверка...</span></div></section>
+<section id="input" class="page hidden">
+  <div class="card"><h3>Загрузка данных батчем</h3>
+    <input id="mission" placeholder="mission_1" value="mission_demo" />
+    <button onclick="loadDemo()">Загрузить demo 100 точек</button>
+    <button onclick="fetchMissionList()">Обновить список миссий</button>
+    <pre id="inputOut"></pre>
+  </div>
+  <div class="card"><h3>Проверка/предобработка</h3>
+    <input id="prepMission" placeholder="mission_1" value="mission_demo"/>
+    <input id="minQuality" type="number" step="0.01" value="0.7"/>
+    <input id="sigma" type="number" step="0.1" value="2.0"/>
+    <button onclick="preprocess()">Предобработка</button><pre id="prepOut"></pre></div>
+  <div class="card"><h3>Миссии</h3>
+    <table id="missionsTbl"><thead><tr><th>mission_id</th><th>count</th></tr></thead><tbody></tbody></table>
+  </div></section>
+<section id="calc" class="page hidden"><div class="card"><h3>Запуск расчёта</h3>
+  <input id="calcMission" placeholder="mission_1" value="mission_demo"/>
+  <select id="mode"><option value="practical">Практический</option><option value="experimental">Экспериментальный</option></select>
+  <select id="batch"><option>50</option><option selected>100</option><option>250</option><option>1000</option></select>
+  <input id="segments" type="number" min="10" max="100" value="30"/>
+  <input id="refx" placeholder="Эталон X"/><input id="refy" placeholder="Эталон Y"/>
+  <button onclick="runCalc()">Выполнить расчёт</button></div><pre id="calcOut"></pre></section>
+<section id="results" class="page hidden"><div class="card"><h3>История расчётов по миссии</h3>
+  <input id="resMission" placeholder="mission_1" value="mission_demo"/><button onclick="loadResults()">Загрузить</button>
+  <table id="resultsTbl"><thead><tr><th>batch</th><th>x</th><th>y</th><th>rmse</th><th>time</th></tr></thead><tbody></tbody></table></div></section>
+</div></div>
 <script>
-const API='http://localhost:8000/api';
-function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
-async function health(){const r=await fetch(`${API}/health`);document.getElementById('health').textContent=(await r.json()).status;}
+const API='http://127.0.0.1:8000/api';
+const byId=(id)=>document.getElementById(id);
+function show(id){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));byId(id).classList.remove('hidden');}
+async function safeFetch(url, options){
+  const res = await fetch(url, options);
+  let data; try { data = await res.json(); } catch { data = {detail: 'Некорректный ответ сервера'}; }
+  if(!res.ok){ throw new Error(data.detail || JSON.stringify(data)); }
+  return data;
+}
+async function health(){
+  try{ const data = await safeFetch(`${API}/health`); byId('health').textContent=data.status; }
+  catch(e){ byId('health').textContent=`ошибка: ${e.message}`; }
+}
 function genDemoRows(mission,count=100){const rows=[];for(let i=0;i<count;i++){rows.push({mission_id:mission,timestamp_utc:new Date(Date.now()+i*1000).toISOString(),uav_x:1200+i*0.9,uav_y:5600+i*1.1,bearing_deg:45+Math.sin(i/7)*8,quality_weight:0.7+Math.random()*0.3});}return rows;}
-async function loadDemo(){const mission=document.getElementById('mission').value||'mission_demo';const rows=genDemoRows(mission,100);await fetch(`${API}/measurements/batch`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mission_id:mission,rows})});await fetchMissionList();alert('demo загружен');}
-async function fetchMissionList(){const r=await fetch(`${API}/missions`);const data=await r.json();const tb=document.querySelector('#missionsTbl tbody');tb.innerHTML='';data.forEach(x=>tb.innerHTML+=`<tr><td>${x.mission_id}</td><td>${x.count}</td></tr>`);}
-async function preprocess(){const payload={mission_id:prepMission.value,min_quality:Number(minQuality.value),outlier_sigma:Number(sigma.value)};const r=await fetch(`${API}/measurements/preprocess`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});prepOut.textContent=JSON.stringify(await r.json(),null,2)}
-async function runCalc(){const payload={mission_id:calcMission.value,mode:mode.value,batch_size:Number(batch.value),grid_segments:Number(segments.value),reference_x:refx.value?Number(refx.value):null,reference_y:refy.value?Number(refy.value):null};const r=await fetch(`${API}/stream/run`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});calcOut.textContent=JSON.stringify(await r.json(),null,2)}
-async function loadResults(){const r=await fetch(`${API}/estimations/${resMission.value}`);const data=await r.json();const tb=document.querySelector('#resultsTbl tbody');tb.innerHTML='';data.forEach(x=>tb.innerHTML+=`<tr><td>${x.batch_no}</td><td>${x.x.toFixed(3)}</td><td>${x.y.toFixed(3)}</td><td>${x.rmse.toFixed(3)}</td><td>${x.created_at}</td></tr>`);}
-health();
+function syncMissionFields(m){['mission','prepMission','calcMission','resMission'].forEach(id=>byId(id).value=m)}
+async function loadDemo(){
+  const mission=byId('mission').value.trim() || 'mission_demo';
+  syncMissionFields(mission);
+  try{
+    const rows=genDemoRows(mission,100);
+    const data = await safeFetch(`${API}/measurements/batch`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mission_id:mission,rows})});
+    byId('inputOut').textContent = `Загружено: ${data.ingested}`;
+    await fetchMissionList();
+  }catch(e){ byId('inputOut').textContent = `Ошибка загрузки: ${e.message}`; }
+}
+async function fetchMissionList(){
+  try{
+    const data=await safeFetch(`${API}/missions`);
+    const tb=document.querySelector('#missionsTbl tbody');tb.innerHTML='';
+    data.forEach(x=>tb.innerHTML+=`<tr><td>${x.mission_id}</td><td>${x.count}</td></tr>`);
+    if(data.length===0){tb.innerHTML='<tr><td colspan="2">Нет данных. Сначала загрузите demo.</td></tr>';}
+  }catch(e){ byId('inputOut').textContent = `Ошибка списка миссий: ${e.message}`; }
+}
+async function preprocess(){
+  const mission = byId('prepMission').value.trim();
+  if(!mission){ byId('prepOut').textContent='Укажите mission_id'; return; }
+  try{
+    const payload={mission_id:mission,min_quality:Number(byId('minQuality').value),outlier_sigma:Number(byId('sigma').value)};
+    const data = await safeFetch(`${API}/measurements/preprocess`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    byId('prepOut').textContent=JSON.stringify(data,null,2);
+  }catch(e){ byId('prepOut').textContent = `Ошибка предобработки: ${e.message}`; }
+}
+async function runCalc(){
+  const mission = byId('calcMission').value.trim();
+  if(!mission){ byId('calcOut').textContent='Укажите mission_id'; return; }
+  try{
+    const payload={mission_id:mission,mode:byId('mode').value,batch_size:Number(byId('batch').value),grid_segments:Number(byId('segments').value),reference_x:byId('refx').value?Number(byId('refx').value):null,reference_y:byId('refy').value?Number(byId('refy').value):null};
+    const data = await safeFetch(`${API}/stream/run`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    byId('calcOut').textContent=JSON.stringify(data,null,2);
+  }catch(e){ byId('calcOut').textContent=`Ошибка расчёта: ${e.message}`; }
+}
+async function loadResults(){
+  const mission = byId('resMission').value.trim();
+  if(!mission){ return; }
+  try{
+    const data=await safeFetch(`${API}/estimations/${mission}`);
+    const tb=document.querySelector('#resultsTbl tbody');tb.innerHTML='';
+    data.forEach(x=>tb.innerHTML+=`<tr><td>${x.batch_no}</td><td>${x.x.toFixed(3)}</td><td>${x.y.toFixed(3)}</td><td>${x.rmse.toFixed(3)}</td><td>${x.created_at}</td></tr>`);
+    if(data.length===0){tb.innerHTML='<tr><td colspan="5">Нет расчётов для этой миссии.</td></tr>';}
+  }catch(e){ byId('calcOut').textContent=`Ошибка получения результатов: ${e.message}`; }
+}
+health();fetchMissionList();
 </script>
-</body>
-</html>
+</body></html>

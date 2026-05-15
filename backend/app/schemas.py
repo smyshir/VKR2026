@@ -11,6 +11,19 @@ class MeasurementCreate(BaseModel):
     quality_weight: float | None = Field(default=1.0, gt=0)
 
 
+class MeasurementOut(BaseModel):
+    id: int
+    mission_id: str
+    timestamp_utc: datetime
+    uav_x: float | None = None
+    uav_y: float | None = None
+    bearing_deg: float | None = None
+    quality_weight: float | None = None
+
+    class Config:
+        from_attributes = True
+
+
 class BatchIngestRequest(BaseModel):
     mission_id: str
     rows: list[MeasurementCreate]

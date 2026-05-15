@@ -47,14 +47,14 @@ cd VKR2026
 ### 3) Создать БД в PostgreSQL
 В DBeaver:
 1. Подключитесь к вашему PostgreSQL серверу.
-2. Создайте БД `vkr2026` (UTF-8).
+2. Создайте БД `VKR2026` (UTF-8).
 3. Откройте SQL Editor для этой БД.
 4. Выполните содержимое файла `sql/schema.sql`.
 
 Альтернатива через psql:
 ```powershell
-psql -U postgres -c "CREATE DATABASE vkr2026;"
-psql -U postgres -d vkr2026 -f sql/schema.sql
+psql -U postgres -c "CREATE DATABASE "VKR2026";"
+psql -U postgres -d "VKR2026" -f sql/schema.sql
 ```
 
 ### 4) Открыть проект в VS Code
@@ -78,11 +78,11 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 ### 6) Настроить подключение backend к PostgreSQL
 По умолчанию backend использует:
-- `postgresql+psycopg://postgres:postgres@localhost:5432/vkr2026`
+- `postgresql+psycopg://postgres:postgres@localhost:5432/VKR2026`
 
 Если у вас другой пользователь/пароль, задайте переменную окружения перед запуском:
 ```powershell
-$env:DATABASE_URL = "postgresql+psycopg://<user>:<password>@localhost:5432/vkr2026"
+$env:DATABASE_URL = "postgresql+psycopg://<user>:<password>@localhost:5432/VKR2026"
 ```
 
 ### 7) Запустить backend
@@ -121,7 +121,7 @@ python -m http.server 5500
 ### Ошибка подключения к БД
 - Проверьте, что PostgreSQL служба запущена.
 - Проверьте `host/port/user/password` в `DATABASE_URL`.
-- Проверьте, что БД `vkr2026` существует.
+- Проверьте, что БД `VKR2026` существует.
 
 ### `ModuleNotFoundError`
 - Убедитесь, что активировано `.venv`.
@@ -148,7 +148,7 @@ python -m venv .venv
 pip install -r backend/requirements.txt
 
 # 2) Применить схему (если psql настроен)
-psql -U postgres -d vkr2026 -f sql/schema.sql
+psql -U postgres -d "VKR2026" -f sql/schema.sql
 
 # 3) Запустить backend
 uvicorn backend.app.main:app --reload
